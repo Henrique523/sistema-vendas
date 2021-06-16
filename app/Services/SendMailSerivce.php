@@ -4,22 +4,26 @@
 namespace App\Services;
 
 use App\Dtos\LogEmailEnviadoOuAgendadoDto;
+use App\Dtos\MailerSendMailDto;
 use App\Errors\InvalidParamError;
-use App\Repositories\UserEmailsRepository;
-use App\Repositories\UsersRepository;
+use App\Repositories\Contracts\IUserEmailsRepository;
+use App\Repositories\Contracts\IUsersRepository;
+use App\Services\Mailer\Contracts\IMailerService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SendMailSerivce
 {
 
-    private UsersRepository $usersRepository;
-    private UserEmailsRepository $userEmailsRepository;
+    private IUsersRepository $usersRepository;
+    private IUserEmailsRepository $userEmailsRepository;
+    private IMailerService $mailerService;
 
-    public function __construct(UsersRepository $usersRepository, UserEmailsRepository $userEmailsRepository)
+    public function __construct(IUsersRepository $usersRepository, IUserEmailsRepository $userEmailsRepository, IMailerService $mailerService)
     {
         $this->usersRepository = $usersRepository;
         $this->userEmailsRepository = $userEmailsRepository;
+        $this->mailerService = $mailerService;
     }
 
     public function sendMailService(Request $request)
@@ -49,6 +53,8 @@ class SendMailSerivce
             $agendar = $request->agendar;
             $status = 'AGENDADO';
         }
+
+        $this->mailerService->sendMail(new MailerSendMailDto($request->email, $request->nome, $request->assunto, $request->corpo_email, $agendar));
 
         $logEmailEnviadoOuAgendadoDto = new LogEmailEnviadoOuAgendadoDto($request->assunto, $request->corpo_email, $agendar, $status, $usuario);
         $log = $this->userEmailsRepository->logEmailEnviadoOuAgendado($logEmailEnviadoOuAgendadoDto);

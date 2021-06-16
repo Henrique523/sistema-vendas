@@ -3,9 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\User;
-use App\Repositories\Contracts\IUserRepository;
+use App\Repositories\Contracts\IUsersRepository;
 
-class UsersRepository
+class UsersRepository implements IUsersRepository
 {
     private User $model;
 
@@ -14,7 +14,7 @@ class UsersRepository
         $this->model = $model;
     }
 
-    public function findUserByEmail(string $email)
+    public function findUserByEmail (string $email)
     {
         return $this->model->where('email', $email)->first();
     }

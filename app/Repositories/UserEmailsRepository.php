@@ -4,8 +4,9 @@ namespace App\Repositories;
 
 use App\Dtos\LogEmailEnviadoOuAgendadoDto;
 use App\Models\UserEmails;
+use App\Repositories\Contracts\IUserEmailsRepository;
 
-class UserEmailsRepository
+class UserEmailsRepository implements IUserEmailsRepository
 {
     private UserEmails $model;
 

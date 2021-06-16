@@ -1,3 +1,3 @@
 <?php
 
-Route::post('/send-mail', 'SendMailController@sendMail');
+Route::post('/agendar', 'SendMailController@sendMail');
