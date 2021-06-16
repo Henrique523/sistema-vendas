@@ -13,4 +13,9 @@ class UserEmails extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function emailsEnviados()
+    {
+        return $this->hasOne(EmailsAgendados::class);
+    }
 }

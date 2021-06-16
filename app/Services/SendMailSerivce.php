@@ -11,6 +11,7 @@ use App\Repositories\Contracts\IUsersRepository;
 use App\Services\Mailer\Contracts\IMailerService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class SendMailSerivce
 {
@@ -57,8 +58,8 @@ class SendMailSerivce
         $this->mailerService->sendMail(new MailerSendMailDto($request->email, $request->nome, $request->assunto, $request->corpo_email, $agendar));
 
         $logEmailEnviadoOuAgendadoDto = new LogEmailEnviadoOuAgendadoDto($request->assunto, $request->corpo_email, $agendar, $status, $usuario);
-        $log = $this->userEmailsRepository->logEmailEnviadoOuAgendado($logEmailEnviadoOuAgendadoDto);
+        $email_usuario = $this->userEmailsRepository->logEmailEnviadoOuAgendado($logEmailEnviadoOuAgendadoDto);
 
-        return $log;
+        return Response::json($email_usuario);
     }
 }
