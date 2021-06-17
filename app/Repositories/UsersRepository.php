@@ -18,4 +18,9 @@ class UsersRepository implements IUsersRepository
     {
         return $this->model->where('email', $email)->first();
     }
+
+    public function findAll()
+    {
+        return $this->model->all();
+    }
 }
