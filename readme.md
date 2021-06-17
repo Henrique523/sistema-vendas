@@ -1,74 +1,113 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# Sistema de Gerenciamento de Vendas
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+## <a name="about"></a>Sobre
 
-## About Laravel
+<p>Este sistema tem por finalidade receber requisicões HTTP de usuários de diferentes sistemas e, 
+a partir delas, agendar ou enviar e-mails através da biblioteca Mailchimp.</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p>Além disso, o sistema gera logs dos emails enviados e gera eventos MySQL que gerarão um segundo
+log no momento que o email foi programado para ser enviado.</p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Instalação
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+<p>Para utilizar o sistema acima, siga as instruções a seguir:</p>
 
-## Learning Laravel
+### 1. Baixar o código
+<p>Execute o comando abaixo para baixar o código:</p>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```shell
+git clone https://github.com/Henrique523/sistema-vendas.git
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+<p>Em seguida, acessar a pasta em que o sistema foi baixado e executar os comandos abaixo:</p>
 
-## Laravel Sponsors
+```shell
+composer install
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### 2. Configurar o banco de dados
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
+<p>O banco de dados utilizado é o <b>MySQL</b>. Portanto, sera necessário tê-lo instalado na mesma
+máquina em que o código foi instalado.</p>
 
-## Contributing
+<p>Em seguida, entrar no terminal do mysql e executar os seguintes comandos:</p>
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```mysql
+CREATE DATABASE vendas;
+SET GLOBAL event_scheduler = ON;
+CREATE USER 'sistema_vendas'@'localhost' IDENTIFIED BY 'SistemaVendas';
+GRANT ALL PRIVILEGES ON vendas . * TO 'sistema_vendas'@'localhost';
+FLUSH PRIVILEGES;
+```
 
-## Security Vulnerabilities
+Após esta etapa, voltar para a pasta do projeto
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 3. Configurar arquivos do projeto
 
-## License
+Criar uma cópia do arquivo `.env.example` e nomeá-la como `.env`.
+Em seguida, alterar os valores nas variáveis conforme mostrado abaixo:
 
-The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```dotenv
+APP_ENV=prod
+APP_DEBUG=false
+
+MAILCHIMP_KEY=
+APP_KEY=
+
+DB_DATABASE=vendas
+DB_USERNAME=sistema_vendas
+DB_PASSWORD=SistemaVendas
+```
+> **_Observação_:** O valor da variaável `MAILCHIMP_KEY` será enviado por e-mail e whatsapp e deverá
+> ser colocado no arquivo obrigatoriamente também. O Mesmo vale para a chave `APP_KEY`
+
+### 4. Criar as tabelas
+
+Nesta etapa serão geradas as tabelas, além de popular a tabela **Users**. Seguir os comandos
+abaixo no terminal:
+
+```shell
+php artisan migrate
+php artisan db:seed --class=UsersTableSeeder
+```
+
+<p>Efetuados todos os passos, o sistema já esta configurado e pronto para ser executado
+através do comando abaixo.</p>
+
+```shell
+php artisan serve
+```
+---
+
+## Funcionamento
+
+O sistema, como dito no título [**Sobre**](#about), receberá requisições HTTP através de vários
+sistemas diferentes. Para que as requisições sejam enviadas da forma correta,
+sera necessário enviá-las através do método <span style="color: orange">POST</span> na rota `/agendar`.
+
+<p>Um exemplo do body que deve vir na requisicão segue abaixo:</p>
+
+```json
+{
+    "nome": "Fulano da Silva", 
+    "email": "fulano@teste.com.br", 
+    "assunto": "Teste", 
+    "corpo_email": "Olá mundo!", 
+    "agendar": "2021-05-15 08:00:00"
+}
+```
+
+### Importante
+
+> **Aviso 1**: O sistema considera que apenas usuários cadastrados no banco de dados, e
+> com seus respectivos emails podem enviar email. Caso contrário, o sistema irá
+> lançar uma exceção.
+
+>  **Aviso 2**: O sistema lançará também uma exceção caso o usuário tente agendar
+> um e-mail com uma data do passado. O campo *agendar* do corpo da requisicão, porém,
+> pode ser enviado vazio caso o email tenha que ser enviado automaticamente.
+
+Para simular os testes, foi criado um seeder que popula o banco de dados 
+com três usuários. Para saber dados destes usuários para serem utilizados nos testes,
+basta executar uma requisicão <span style="color: green">GET</span> para a rota
+`/usuarios`.
