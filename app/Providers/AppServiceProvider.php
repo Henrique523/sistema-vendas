@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Repositories\Contracts\IEmailsAgendadosRepository;
 use App\Repositories\Contracts\IUserEmailsRepository;
 use App\Repositories\Contracts\IUsersRepository;
+use App\Repositories\EmailAgendadosRepository;
 use App\Repositories\UserEmailsRepository;
 use App\Repositories\UsersRepository;
 use App\Services\Mailer\Contracts\IMailerService;
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(IUsersRepository::class, UsersRepository::class);
         $this->app->bind(IUserEmailsRepository::class, UserEmailsRepository::class);
         $this->app->bind(IMailerService::class, MailchimpMailerService::class);
+        $this->app->bind(IEmailsAgendadosRepository::class, EmailAgendadosRepository::class);
     }
 
     /**
